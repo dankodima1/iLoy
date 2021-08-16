@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tms.Api</name>
+    </assembly>
+    <members>
+        <member name="T:Tms.Api.Controllers.ReportController">
+            <summary>
+            controller for generating reports
+            </summary>
+        </member>
+        <member name="M:Tms.Api.Controllers.ReportController.#ctor(Tms.Logger.ITmsLogger,Tms.Service.ITaskItemService,Tms.Service.IReportService)">
+            <summary>
+            constructor
+            </summary>
+            <param name="logger"></param>
+            <param name="taskItemService"></param>
+            <param name="reportService"></param>
+        </member>
+        <member name="M:Tms.Api.Controllers.ReportController.GetReportAsync(System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Get report
+            </summary>
+            <returns>report stream</returns>
+        </member>
+        <member name="T:Tms.Api.Controllers.TaskController">
+            <summary>
+            controller for CRUD with TaskItem
+            </summary>
+        </member>
+        <member name="M:Tms.Api.Controllers.TaskController.#ctor(Tms.Logger.ITmsLogger,Tms.Service.ITaskItemService)">
+            <summary>
+            constructor
+            </summary>
+            <param name="logger"></param>
+            <param name="taskItemService"></param>
+        </member>
+        <member name="M:Tms.Api.Controllers.TaskController.GetTasksAsync">
+            <summary>
+            Get all TaskItems
+            </summary>
+            <returns>TaskItemRootDto</returns>
+        </member>
+        <member name="M:Tms.Api.Controllers.TaskController.GetTaskAsync(System.Int32)">
+            <summary>
+            Get TaskItem by Id
+            </summary>
+            <returns>TaskItemRootDto</returns>
+        </member>
+        <member name="M:Tms.Api.Controllers.TaskController.CreateTaskAsync(Tms.Dto.TaskItemDto)">
+            <summary>
+            Create TaskItem
+            </summary>
+            <returns>TaskItemRootDto</returns>
+        </member>
+        <member name="M:Tms.Api.Controllers.TaskController.UpdateTaskAsync(Tms.Dto.TaskItemDto)">
+            <summary>
+            Update TaskItem
+            </summary>
+            <returns>TaskItemRootDto</returns>
+        </member>
+        <member name="M:Tms.Api.Controllers.TaskController.DeleteTaskAsync(System.Int32)">
+            <summary>
+            Delete TaskItem by Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Tms.Api.Mapping.AutoMapperConfiguration.Mapper">
+            <summary>
+            Mapper
+            </summary>
+        </member>
+        <member name="P:Tms.Api.Mapping.AutoMapperConfiguration.MapperConfiguration">
+            <summary>
+            Mapper configuration
+            </summary>
+        </member>
+        <member name="M:Tms.Api.Mapping.AutoMapperConfiguration.Init(AutoMapper.MapperConfiguration,AutoMapper.IMapper)">
+            <summary>
+            Initialize mapper
+            </summary>
+            <param name="config">Mapper configuration</param>
+        </member>
+    </members>
+</doc>

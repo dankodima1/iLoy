@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <WebSdkAnalyzersPath>$(NetCoreRoot)\$(NETCoreSdkVersion)\Sdks\Microsoft.NET.Sdk.Web\analyzers\cs</WebSdkAnalyzersPath>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>..\Tms.Web\Tms.Api.xml</DocumentationFile>
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tms.Data\Tms.Data.csproj" />
+    <ProjectReference Include="..\Tms.Dto\Tms.Dto.csproj" />
+    <ProjectReference Include="..\Tms.Enum\Tms.Enum.csproj" />
+    <ProjectReference Include="..\Tms.Logger\Tms.Logger.csproj" />
+    <ProjectReference Include="..\Tms.Service\Tms.Service.csproj" />
+  </ItemGroup>
+
+</Project>
