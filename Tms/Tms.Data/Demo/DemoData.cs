@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 
 using Tms.Data.Domain;
 using Tms.Dto;
@@ -49,7 +47,7 @@ namespace Tms.Data.Demo
                 {
                     Id = i,
                     Name = $"Subtask {i:000}",
-                    Description = $"Test subtask has Id = {i:000}, parent Id = {i:000}",
+                    Description = $"Test subtask has Id = {i:000}, parent Id = {parentId:000}",
                     StartDateUtc = startDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
                     FinishDateUtc = finishDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
                     ParentId = parentId
@@ -70,6 +68,61 @@ namespace Tms.Data.Demo
                     State = TaskItemState.InProgress
                 };
             }
+
+            // subtasks for in-progress tasks
+            parentId = startId + 2;
+            yield return new TaskItem
+            {
+                Id = ++i,
+                Name = $"Subtask {i:000}",
+                Description = $"Test subtask has Id = {i:000}, parent Id = {parentId:000}",
+                StartDateUtc = startDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                FinishDateUtc = finishDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                State = TaskItemState.Completed,
+                ParentId = parentId
+            };
+            yield return new TaskItem
+            {
+                Id = ++i,
+                Name = $"Subtask {i:000}",
+                Description = $"Test subtask has Id = {i:000}, parent Id = {parentId:000}",
+                StartDateUtc = startDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                FinishDateUtc = finishDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                State = TaskItemState.InProgress,
+                ParentId = parentId
+            };
+
+            parentId = startId + 5;
+            yield return new TaskItem
+            {
+                Id = ++i,
+                Name = $"Subtask {i:000}",
+                Description = $"Test subtask has Id = {i:000}, parent Id = {parentId:000}",
+                StartDateUtc = startDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                FinishDateUtc = finishDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                State = TaskItemState.InProgress,
+                ParentId = parentId
+            };
+            yield return new TaskItem
+            {
+                Id = ++i,
+                Name = $"Subtask {i:000}",
+                Description = $"Test subtask has Id = {i:000}, parent Id = {parentId:000}",
+                StartDateUtc = startDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                FinishDateUtc = finishDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                State = TaskItemState.Planned,
+                ParentId = parentId
+            };
+            yield return new TaskItem
+            {
+                Id = ++i,
+                Name = $"Subtask {i:000}",
+                Description = $"Test subtask has Id = {i:000}, parent Id = {parentId:000}",
+                StartDateUtc = startDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                FinishDateUtc = finishDateTimeUtc.AddDays(i - parentId).AddHours(i + 6),
+                State = TaskItemState.Planned,
+                ParentId = parentId
+            };
         }
 
         #region SINGLE TASK

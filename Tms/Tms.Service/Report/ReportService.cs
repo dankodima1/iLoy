@@ -13,7 +13,6 @@ using Tms.Data.Domain;
 using Tms.Enum;
 using Tms.Logger;
 using Tms.Data.Repository;
-using Tms.Dto.Extensions;
 using Tms.Enum.Extensions;
 
 namespace Tms.Service
@@ -55,7 +54,6 @@ namespace Tms.Service
         {
             // get records
             var taskItems = await this.GetInProgressTasks_ByDates(dateFrom, dateTo).ToListAsync();
-            //var taskItems = await _taskItemRepository.Entities.ToListAsync();
 
             // csv config
             var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -65,19 +63,6 @@ namespace Tms.Service
             };
 
             // write csv
-            //byte[] buffer = null;
-            //using (var stream = new MemoryStream())
-            //using (var writer = new StreamWriter(stream))
-            //using (var csvWriter = new CsvWriter(writer, csvConfig))
-            //{
-            //    this.WriteCaption(csvWriter, dateFrom, dateTo);
-            //    //this.WriteData(csvWriter, taskItems);
-            //    //await csvWriter.WriteRecordsAsync(taskItems);
-
-            //    stream.Position = 0;
-            //    buffer = stream.GetBuffer();
-            //}
-
             using (var memoryStream = new MemoryStream())
             {
                 using (var streamWriter = new StreamWriter(memoryStream))
@@ -102,13 +87,12 @@ namespace Tms.Service
             csvWriter.WriteField($"{dateFrom}");
             csvWriter.WriteField($"{dateTo}");
             csvWriter.NextRecord();
+            csvWriter.WriteField("Id");
             csvWriter.WriteField("Name");
-            csvWriter.WriteField("Subtask name");
             csvWriter.WriteField("Description");
             csvWriter.WriteField("StartDateUtc");
             csvWriter.WriteField("FinishDateUtc");
-            csvWriter.WriteField("Subtask state");
-            //csvWriter.WriteField("Subtasks");
+            csvWriter.WriteField("State");
             csvWriter.NextRecord();
         }
 
@@ -116,13 +100,12 @@ namespace Tms.Service
         {
             foreach (var taskItem in taskItems)
             {
+                csvWriter.WriteField($"{taskItem.Id}");
                 csvWriter.WriteField($"{taskItem.Name}");
-                csvWriter.WriteField(string.Empty);
                 csvWriter.WriteField($"{taskItem.Description}");
                 csvWriter.WriteField($"{taskItem.StartDateUtc}");
                 csvWriter.WriteField($"{taskItem.FinishDateUtc}");
-                //csvWriter.WriteField($"{taskItem.State.Name()}");
-                //csvWriter.WriteField($"{taskItem.Subtasks}");
+                csvWriter.WriteField($"{taskItem.State.Name()}");
                 csvWriter.NextRecord();
 
                 WriteSubtasks(csvWriter, taskItem.Subtasks.ToList());
@@ -133,8 +116,8 @@ namespace Tms.Service
         {
             foreach (var subtask in subtasks)
             {
-                csvWriter.WriteField(string.Empty);
-                csvWriter.WriteField($"{subtask.Name}");
+                csvWriter.WriteField($"{subtask.Id}");
+                csvWriter.WriteField($"   -> {subtask.Name}");
                 csvWriter.WriteField($"{subtask.Description}");
                 csvWriter.WriteField($"{subtask.StartDateUtc}");
                 csvWriter.WriteField($"{subtask.FinishDateUtc}");

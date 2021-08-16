@@ -5,27 +5,14 @@ using System.Net.Http;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Data.Entity.Infrastructure;
 
 using NUnit.Framework;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Moq;
 
-using Tms.Api.Controllers;
 using Tms.Data.Domain;
-using Tms.Logger;
-using Tms.Service;
-using Tms.Web;
 using Tms.Dto;
 using Tms.Dto.Extensions;
-using Tms.Data.Context;
 using Tms.Data.Demo;
-using Tms.Data.Repository;
 using Tms.Test.Extensions;
 
 namespace Tms.Test.Api

@@ -13,7 +13,6 @@ namespace Tms.Service
 
         Task<TaskItem> CreateAsync(TaskItem entity);
         Task UpdateAsync(TaskItem entity);
-        //Task DeleteAsync(int entityId);
         Task DeleteAsync(TaskItem entity);
     }
 }

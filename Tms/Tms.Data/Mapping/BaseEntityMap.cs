@@ -8,10 +8,6 @@ namespace Tms.Data.Mapping
     {
         public static void Configure(ModelBuilder builder)
         {
-            //builder.Entity<TaskItem>()
-            //    .HasOne(x => x.Parent).WithMany(x => x.Subtasks).HasForeignKey(x => x.ParentId)
-            //    .OnDelete(DeleteBehavior.SetNull);// delete Subtask if deleted Parent
-
             builder.Entity<TaskItem>()
                 .Property(x => x.CreatedOnUtc)
                 .HasDefaultValueSql("getutcdate()");

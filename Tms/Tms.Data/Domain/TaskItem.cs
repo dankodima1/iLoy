@@ -40,6 +40,18 @@ namespace Tms.Data.Domain
             get => Subtasks.AsQueryable().OrderBy(x => x.Name);
         }
 
+        [NotMapped]
+        public virtual bool HasSubtasks
+        {
+            get => Subtasks.Any();
+        }
+
+        [NotMapped]
+        public virtual bool HasParent
+        {
+            get => (ParentId != null);
+        }
+
         #endregion SUBTASKS
 
         #region INFO

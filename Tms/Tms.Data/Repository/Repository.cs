@@ -30,13 +30,13 @@ namespace Tms.Data.Repository
 
         public async Task<T> GetAsync(int id)
         {
-            //return await Entities.FindAsync(id);
+            //return await Entities.FindAsync(id);// not working with mock
             return Entities.Where(x => x.Id == id).FirstOrDefault();
         }
 
         public async Task<IQueryable<T>> GetAsync(int[] ids)
         {
-            //return (IQueryable<T>)await Entities.FindAsync(ids);
+            //return (IQueryable<T>)await Entities.FindAsync(ids);// not working with mock
             return Entities.Where(x => ids.Contains(x.Id)).AsQueryable();
         }
 

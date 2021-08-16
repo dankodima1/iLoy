@@ -5,29 +5,17 @@ using System.Net.Http;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Data.Entity.Infrastructure;
 
 using NUnit.Framework;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Moq;
 
-using Tms.Api.Controllers;
 using Tms.Api.Mapping;
 using Tms.Data.Domain;
-using Tms.Data.Context;
 using Tms.Data.Demo;
-using Tms.Data.Repository;
-using Tms.Logger;
-using Tms.Service;
-using Tms.Web;
 using Tms.Dto;
 using Tms.Dto.Extensions;
 using Tms.Test.Extensions;
+using Tms.Enum;
 
 namespace Tms.Test.Api
 {
@@ -94,6 +82,68 @@ namespace Tms.Test.Api
             Assert.AreEqual(taskItemDto_Src.Description, taskItemDto.Description);
             Assert.AreEqual(taskItemDto_Src.StartDateUtc, taskItemDto.StartDateUtc);
             Assert.AreEqual(taskItemDto_Src.FinishDateUtc, taskItemDto.FinishDateUtc);
+        }
+
+        [Test, Theory]
+        [TestCase(WebRequestMethods.Http.Post)]
+        public async Task ShouldUpdate_Status_And_Return_Subtask(string httpMethod)
+        {
+            // data
+            TaskItem taskItem_Dest = _demoTaskItems.FirstOrDefault(x => x.Id == 23);
+            TaskItemDto taskItemDto_Dest = taskItem_Dest.ToDto();
+            taskItemDto_Dest.State = TaskItemState.Completed;
+
+            // act 1
+            var request = new HttpRequestMessage(new HttpMethod(httpMethod), $"{ApiList.CLIENT_API_TASK_UPDATE}");
+            var json = JsonConvert.SerializeObject(taskItemDto_Dest);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.SendAsync(request);
+
+            // assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, response.GetErrorMessage());
+
+            // json
+            json = await response.Content.ReadAsStringAsync();
+            TaskItemRootDto taskItemRootDto = JsonConvert.DeserializeObject<TaskItemRootDto>(json);
+
+            // assert
+            Assert.IsNotNull(taskItemRootDto);
+            Assert.IsNotEmpty(taskItemRootDto.Values);
+            Assert.AreEqual(1, taskItemRootDto.Values.Count);
+
+            // get first value
+            TaskItemDto taskItemDto = taskItemRootDto.Values.FirstOrDefault();
+
+            // assert
+            Assert.IsNotNull(taskItemDto);
+            Assert.Positive(taskItemDto.Id);
+            Assert.AreEqual(taskItemDto_Dest.Id, taskItemDto.Id);
+            Assert.AreEqual(taskItemDto_Dest.State, taskItemDto.State);
+
+            // act 2
+            request = new HttpRequestMessage(new HttpMethod(WebRequestMethods.Http.Get), $"{ApiList.CLIENT_API_TASK}{taskItem_Dest.ParentId}");
+            response = await _client.SendAsync(request);
+
+            // assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, response.GetErrorMessage());
+
+            // json
+            json = await response.Content.ReadAsStringAsync();
+            taskItemRootDto = JsonConvert.DeserializeObject<TaskItemRootDto>(json);
+
+            // assert
+            Assert.IsNotNull(taskItemRootDto);
+            Assert.IsNotEmpty(taskItemRootDto.Values);
+            Assert.AreEqual(1, taskItemRootDto.Values.Count);
+
+            // get first value
+            taskItemDto = taskItemRootDto.Values.FirstOrDefault();
+
+            // assert
+            Assert.IsNotNull(taskItemDto);
+            Assert.Positive(taskItemDto.Id);
+            Assert.AreEqual(taskItem_Dest.ParentId, taskItemDto.Id);
+            Assert.AreEqual(TaskItemState.Completed, taskItemDto.State);
         }
 
         [Test, Theory]

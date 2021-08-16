@@ -11,7 +11,6 @@ using Tms.Api.Mapping;
 using Tms.Api.Extensions;
 using Tms.Data.Domain;
 using Tms.Dto;
-using Tms.Enum;
 using Tms.Logger;
 using Tms.Service;
 using Tms.Dto.Extensions;
@@ -197,20 +196,6 @@ namespace Tms.Api.Controllers
 
                 // to ent
                 taskItemDto.ToEnt(taskItem);
-
-                // status for parent
-                if (taskItem.Subtasks.Any())
-                {
-                    bool isCompleted = !taskItem.Subtasks.Where(x => x.State != TaskItemState.Completed).Any();
-                    bool isInProgress = taskItem.Subtasks.Where(x => x.State == TaskItemState.InProgress).Any();
-
-                    if (isCompleted)
-                        taskItem.State = TaskItemState.Completed;
-                    else if (isInProgress)
-                        taskItem.State = TaskItemState.InProgress;
-                    else
-                        taskItem.State = TaskItemState.Planned;
-                }
 
                 // update
                 await _taskItemService.UpdateAsync(taskItem);

@@ -20,6 +20,7 @@ namespace Tms.Logger
         /// <returns></returns>
         public static string GetUserInfo(this NLog.Logger logger)
         {
+            // example for identity
             //string userId = "";
             //string userEmail = "";
             //try

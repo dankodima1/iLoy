@@ -9,6 +9,7 @@ using Tms.Data.Domain;
 using Tms.Logger;
 using Tms.Data.Repository;
 using Tms.Dto.Extensions;
+using Tms.Enum;
 
 namespace Tms.Service
 {
@@ -73,7 +74,12 @@ namespace Tms.Service
             if (entity == null)
                 throw new Exception(DtoExtensions.GetErrorMessage_IsNull(nameof(entity)));
 
+            // create entity
             entity = await _taskItemRepository.CreateAsync(entity);
+
+            // update state
+            await this.UpdateParentStateAsync(entity);
+
             return entity;
         }
 
@@ -82,32 +88,101 @@ namespace Tms.Service
             if (entity == null)
                 throw new Exception(DtoExtensions.GetErrorMessage_IsNull(nameof(entity)));
 
+            // update entity
             await _taskItemRepository.UpdateAsync(entity);
+
+            // update state
+            await this.UpdateParentStateAsync(entity);
         }
-
-        //public async Task DeleteAsync(int entityId)
-        //{
-        //    var entity = await _taskItemRepository.GetAsync(entityId);
-        //    if (entity == null)
-        //        throw new Exception($"{nameof(TaskItem)} (Id = {entityId}) not found");
-
-        //    if (entity.Subtasks.Any())
-        //        await _taskItemRepository.DeleteAsync(entity.Subtasks.ToList());
-
-        //    await _taskItemRepository.DeleteAsync(entity);
-        //}
 
         public async Task DeleteAsync(TaskItem entity)
         {
             if (entity == null)
                 throw new Exception(DtoExtensions.GetErrorMessage_IsNull(nameof(entity)));
-            if (entity == null)
-                throw new Exception(DtoExtensions.GetErrorMessage_IsNull(nameof(entity)));
 
-            if (entity.Subtasks.Any())
+            // delete subtasks
+            if (entity.HasSubtasks)
                 await _taskItemRepository.DeleteAsync(entity.Subtasks.ToList());
 
+            // delete entity
+            int? parentId = entity.ParentId;
             await _taskItemRepository.DeleteAsync(entity);
+
+            // update state
+            await this.UpdateParentStateAsync(parentId);
         }
+
+        #region UPDATE PARENT STATE
+
+        public async Task UpdateParentStateAsync(int? parentId)
+        {
+            if (parentId == null)
+                return;
+
+            TaskItem taskItem = await _taskItemRepository.GetAsync(parentId.Value);
+            if (taskItem == null)
+            {
+                _logger.Error(null, DtoExtensions.GetErrorMessage_NotFound(nameof(taskItem), parentId));
+                return;
+            }
+
+            await this.UpdateParentStateAsync(taskItem);
+        }
+
+        public async Task UpdateParentStateAsync(TaskItem taskItem)
+        {
+            TaskItem taskItemForUpdate = null;
+            if (taskItem.HasSubtasks)
+                taskItemForUpdate = taskItem;
+            else if (taskItem.HasParent)
+                taskItemForUpdate = taskItem.Parent;
+            else
+                return;
+
+            // update state for parent if changed
+            TaskItemState newState = this.CalculateTaskState(taskItemForUpdate);
+            await this.UpdateTaskState_IfChangedAsync(taskItemForUpdate, newState);
+        }
+
+        private TaskItemState CalculateTaskState(TaskItem taskItem)
+        {
+            if (taskItem == null)
+            {
+                _logger.Error(null, DtoExtensions.GetErrorMessage_IsNull(nameof(taskItem)));
+                return taskItem.State;
+            }
+
+            if (!taskItem.HasSubtasks)
+            {
+                _logger.Error(null, $"Expected Subtasks for {taskItem.Info}");
+                return taskItem.State;
+            }
+
+            TaskItemState taskItemState;
+
+            // calc new state
+            bool isCompleted = !taskItem.Subtasks.Where(x => x.State != TaskItemState.Completed).Any();
+            bool isInProgress = taskItem.Subtasks.Where(x => x.State == TaskItemState.InProgress).Any();
+
+            if (isCompleted)
+                taskItemState = TaskItemState.Completed;
+            else if (isInProgress)
+                taskItemState = TaskItemState.InProgress;
+            else
+                taskItemState = TaskItemState.Planned;
+
+            return taskItemState;
+        }
+
+        private async Task UpdateTaskState_IfChangedAsync(TaskItem taskItem, TaskItemState newState)
+        {
+            if (newState == taskItem.State)
+                return;
+
+            taskItem.State = newState;
+            await _taskItemRepository.UpdateAsync(taskItem);
+        }
+
+        #endregion UPDATE PARENT STATE
     }
 }

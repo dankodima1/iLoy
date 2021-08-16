@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 using Tms.Dto.Extensions;
 using Tms.Logger;
@@ -34,7 +33,7 @@ namespace Tms.Data.Context
                         return;
                     }
 
-                    _context.Database.EnsureCreated();
+                    _context.Database.Migrate();
                 }
             }
             catch (Exception ex)
