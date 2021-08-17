@@ -36,16 +36,5 @@ namespace Tms.Api.Mapping
             mapping.ForMember(d => d.UpdatedOnUtc, c => c.UseDestinationValue());
             return mapping;
         }
-
-        public static IMappingExpression<TSource, TDestination> IgnoreBaseDto<TSource, TDestination>(
-            this IMappingExpression<TSource, TDestination> mapping)
-        where TSource : BaseDto
-        where TDestination : BaseEntity
-        {
-            mapping.ForMember(d => d.Id, c => c.UseDestinationValue());
-            mapping.ForMember(d => d.CreatedOnUtc, c => c.UseDestinationValue());
-            mapping.ForMember(d => d.UpdatedOnUtc, c => c.UseDestinationValue());
-            return mapping;
-        }
     }
 }

@@ -18,8 +18,8 @@ namespace Tms.Test.Service
         private readonly ITmsLogger _logger;
         private readonly ITaskItemService _taskItemService;
         private readonly TestClient _client;
-        private readonly IEnumerable<TaskItem> _demoTaskItems;
         private readonly DemoData _demoData;
+        private readonly IEnumerable<TaskItem> _demoTaskItems;
 
         public TestTaskItemService_Get()
         {

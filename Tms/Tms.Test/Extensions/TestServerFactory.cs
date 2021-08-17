@@ -2,7 +2,6 @@
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,13 +14,15 @@ namespace Tms.Test.Extensions
 {
     public class TestServerFactory<TStartup> : WebApplicationFactory<Startup>
     {
+        private const string AppsettingsJsonFile = "appsettings.Test.json";
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureAppConfiguration(config =>
             {
                 var configuration = (IConfiguration)new ConfigurationBuilder()
                     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile("appsettings.Test.json")
+                    .AddJsonFile(AppsettingsJsonFile)
                     .Build();
 
                 config.AddConfiguration(configuration);

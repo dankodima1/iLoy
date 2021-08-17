@@ -25,7 +25,6 @@ namespace Tms.Api.Mapping
 
             CreateMap<TaskItemDto, TaskItem>()
                 .IgnoreNonExisting()
-                .IgnoreBaseDto()
                 .ForMember(x => x.Subtasks, y => y.Ignore());
 
             CreateMap<TaskItemDto, TaskItemDto>()

@@ -22,8 +22,8 @@ namespace Tms.Test.Api
     {
         private readonly ITmsLogger _logger;
         private readonly TestClient _client;
-        private readonly IEnumerable<TaskItem> _demoTaskItems;
         private readonly DemoData _demoData;
+        private readonly IEnumerable<TaskItem> _demoTaskItems;
 
         public TestReportController()
         {

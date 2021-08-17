@@ -20,11 +20,9 @@ namespace Tms.Test.Api
     [TestFixture]
     public class TestTaskController_Create
     {
-        //private readonly ITmsLogger _logger;
-        //private readonly ITaskItemService _taskItemService;
         private readonly TestClient _client;
-        private readonly IEnumerable<TaskItem> _demoTaskItems;
         private readonly DemoData _demoData;
+        private readonly IEnumerable<TaskItem> _demoTaskItems;
 
         public TestTaskController_Create()
         {
@@ -36,10 +34,6 @@ namespace Tms.Test.Api
             _client = new TestClient();
             _client.SetupContext();
             _client.SetupRepository(_demoTaskItems);
-
-            // services
-            //_logger = new TmsLogger();
-            //_taskItemService = new TaskItemService(_logger, _client.TaskItemRepository.Object);
         }
 
         [Test, Theory]
@@ -68,16 +62,16 @@ namespace Tms.Test.Api
             Assert.AreEqual(1, taskItemRootDto.Values.Count);
 
             // get first value
-            TaskItemDto taskItemDto = taskItemRootDto.Values.FirstOrDefault();
+            TaskItemDto taskItemDto_Dest = taskItemRootDto.Values.FirstOrDefault();
 
             // assert
-            Assert.IsNotNull(taskItemDto);
-            Assert.Positive(taskItemDto.Id);
-            Assert.AreEqual(taskItemDto_Src.Name, taskItemDto.Name);
-            Assert.AreEqual(taskItemDto_Src.Description, taskItemDto.Description);
-            Assert.AreEqual(taskItemDto_Src.StartDateUtc, taskItemDto.StartDateUtc);
-            Assert.AreEqual(taskItemDto_Src.FinishDateUtc, taskItemDto.FinishDateUtc);
-            Assert.AreEqual(taskItemDto_Src.Subtasks.Count(), taskItemDto.Subtasks.Count());
+            Assert.IsNotNull(taskItemDto_Dest);
+            Assert.Positive(taskItemDto_Dest.Id);
+            Assert.AreEqual(taskItemDto_Src.Name, taskItemDto_Dest.Name);
+            Assert.AreEqual(taskItemDto_Src.Description, taskItemDto_Dest.Description);
+            Assert.AreEqual(taskItemDto_Src.StartDateUtc, taskItemDto_Dest.StartDateUtc);
+            Assert.AreEqual(taskItemDto_Src.FinishDateUtc, taskItemDto_Dest.FinishDateUtc);
+            Assert.AreEqual(taskItemDto_Src.State, taskItemDto_Dest.State);
         }
 
         [Test, Theory]

@@ -16,11 +16,9 @@ namespace Tms.Test.Api
     public class TestTaskController_Delete
     {
         private const string HttpDelete = "DELETE";
-        //private readonly ITmsLogger _logger;
-        //private readonly ITaskItemService _taskItemService;
         private readonly TestClient _client;
-        private readonly IEnumerable<TaskItem> _demoTaskItems;
         private readonly DemoData _demoData;
+        private readonly IEnumerable<TaskItem> _demoTaskItems;
 
         public TestTaskController_Delete()
         {
@@ -32,10 +30,6 @@ namespace Tms.Test.Api
             _client = new TestClient();
             _client.SetupContext();
             _client.SetupRepository(_demoTaskItems);
-
-            // services
-            //_logger = new TmsLogger();
-            //_taskItemService = new TaskItemService(_logger, _client.TaskItemRepository.Object);
         }
 
         [Test, Theory]

@@ -40,32 +40,5 @@ namespace Tms.Api.Mapping
         {
             return items.MapTo<IList<TaskItem>, IList<TaskItemDto>>();
         }
-
-        public static IList<TaskItem> ToEnt(this IList<TaskItemDto> itemDtos)
-        {
-            return itemDtos.MapTo<IList<TaskItemDto>, IList<TaskItem>>();
-        }
-
-        // SubtaskItem
-
-        public static SubtaskDto ToSubtaskDto(this TaskItem item)
-        {
-            return item.MapTo<TaskItem, SubtaskDto>();
-        }
-
-        public static TaskItem ToEnt(this SubtaskDto item)
-        {
-            return item.MapTo<SubtaskDto, TaskItem>();
-        }
-
-        public static IList<SubtaskDto> ToSubtaskDto(this IList<TaskItem> items)
-        {
-            return items.MapTo<IList<TaskItem>, IList<SubtaskDto>>();
-        }
-
-        public static IList<TaskItem> ToEnt(this IList<SubtaskDto> itemDtos)
-        {
-            return itemDtos.MapTo<IList<SubtaskDto>, IList<TaskItem>>();
-        }
     }
 }
