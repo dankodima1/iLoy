@@ -135,7 +135,7 @@ namespace Tms.Web
             });
 
             // migration
-            app.UseMigration(env);
+            app.UseMigration();
         }
     }
 

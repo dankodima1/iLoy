@@ -1,7 +1,6 @@
 ﻿using System;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +12,7 @@ namespace Tms.Data.Context
     public static class ApplicationDbContextUtils
     {
         // creating db
-        public static void UseMigration(this IApplicationBuilder app, IWebHostEnvironment env)
+        public static void UseMigration(this IApplicationBuilder app)
         {
             // migration
             try
